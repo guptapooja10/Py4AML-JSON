@@ -10,6 +10,7 @@ from xsdata.formats.dataclass.serializers.config import SerializerConfig
 
 from aml_base import Caexfile
 
+
 # Utility function to optimize JSON dictionary
 def json_optimizer(aml_dict: dict):
     for key, value in aml_dict.copy().items():
@@ -144,7 +145,8 @@ aml_image = Image.open('./aml_logo.png')
 aml_header_logo = Image.open('./aml_header_logo.png')
 
 # Initialize Streamlit page configuration
-st.set_page_config(page_title="AML-JSON Converter", page_icon=aml_image, initial_sidebar_state='collapsed', layout='wide')
+st.set_page_config(page_title="AML-JSON Converter", page_icon=aml_image, initial_sidebar_state='collapsed',
+                   layout='wide')
 
 # Create XML context, parser, and serializer
 context = XmlContext()
@@ -189,7 +191,8 @@ if raw_data is not None:
         st.session_state["type"] = "JSON"
 
 if st.session_state.get("type") == "XML":
-    xml_tab, xml_to_dict_tab, xs_data_tab, optimized_tab = st.tabs(["AML data check", "Simple JSON-Converter", "Schema-based converter", "Optimized Converter (experimental))"])
+    xml_tab, xml_to_dict_tab, xs_data_tab, optimized_tab = st.tabs(
+        ["AML data check", "Simple JSON-Converter", "Schema-based converter", "Optimized Converter (experimental))"])
 
     try:
         with xml_tab:
@@ -229,7 +232,7 @@ if st.session_state.get("type") == "XML":
 
             dict_string: str = json.dumps(dict_data, indent=indent_value)
             byte_length: float = len(dict_string)
-            delta = ((byte_length/1000)/float(st.session_state['raw_data_size'])-1)*100
+            delta = ((byte_length / 1000) / float(st.session_state['raw_data_size']) - 1) * 100
             rounded_delta = round(delta, 2)
             col1, col2, col3 = st.columns([2, 1, 1])
             col1.metric("File name", st.session_state["file_name"])
@@ -240,7 +243,8 @@ if st.session_state.get("type") == "XML":
                 st.session_state["xmltodict_dict"] = dict_data
 
             st.success("AML file successfully converted to JSON, Download file below")
-            st.download_button("Download converted AML-JSON File", file_name=f"{st.session_state['file_name']}.json", mime="application/json", data=dict_string, use_container_width=True)
+            st.download_button("Download converted AML-JSON File", file_name=f"{st.session_state['file_name']}.json",
+                               mime="application/json", data=dict_string, use_container_width=True)
 
         with xs_data_tab:
             bool_column, specific_column = st.columns([1, 5])
@@ -269,7 +273,7 @@ if st.session_state.get("type") == "XML":
 
             cleaned_json: str = json.dumps(cleaned_aml, indent=indent_value)
             byte_length: float = len(cleaned_json)
-            delta = ((byte_length/1000)/float(st.session_state['raw_data_size'])-1)*100
+            delta = ((byte_length / 1000) / float(st.session_state['raw_data_size']) - 1) * 100
             rounded_delta = round(delta, 2)
             col1, col2, col3 = st.columns([2, 1, 1])
             col1.metric("File name", st.session_state["file_name"])
@@ -277,7 +281,9 @@ if st.session_state.get("type") == "XML":
             col3.metric("File size", f"{byte_length / 1000} KB", delta=f"{rounded_delta} % ", delta_color="inverse")
 
             st.success("AML file successfully converted to JSON, Download file below")
-            st.download_button("Download converted AML-JSON File", file_name=f"{st.session_state['file_name']}.json", mime="application/json", data=cleaned_json, use_container_width=True, key="download_button2")
+            st.download_button("Download converted AML-JSON File", file_name=f"{st.session_state['file_name']}.json",
+                               mime="application/json", data=cleaned_json, use_container_width=True,
+                               key="download_button2")
 
         with optimized_tab:
             bool_column, specific_column = st.columns([1, 5])
@@ -310,7 +316,8 @@ elif st.session_state.get("type") == "JSON":
     aml_object: Caexfile = json_parser.bind_dataclass(st.session_state["aml_object"], Caexfile)
     xml_string = xml_serializer.render(aml_object)
     st.success("JSON file successfully converted to AML, Download file below")
-    st.download_button("Download converted AML (.aml) File", file_name=f"{st.session_state['file_name']}.aml", mime="text/xml", data=xml_string, use_container_width=True, key="download_button3")
+    st.download_button("Download converted AML (.aml) File", file_name=f"{st.session_state['file_name']}.aml",
+                       mime="text/xml", data=xml_string, use_container_width=True, key="download_button3")
 
 else:
     st.info("Upload AML file to convert")
